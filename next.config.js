@@ -1,6 +1,9 @@
- /** @type {import('next').NextConfig} */
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   async rewrites() {
+    const isLocalhost = process.env.NODE_ENV === 'development';
+    const appDomain = process.env.NEXT_PUBLIC_APP_DOMAIN || 'app.localhost:3000';
+
     return {
       beforeFiles: [
         {
@@ -8,7 +11,7 @@ const nextConfig = {
           has: [
             {
               type: 'host',
-              value: 'app.localhost:3000',
+              value: isLocalhost ? 'app.localhost:3000' : appDomain,
             },
           ],
           destination: '/app/:path*',
