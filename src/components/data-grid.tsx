@@ -14,7 +14,6 @@ import {Badge} from "@/components/ui/badge";
 import {Plus, Search, SortAsc, SortDesc} from "lucide-react";
 import {useState, useMemo} from "react";
 import Image from "next/image";
-import {Table} from "./ui/table";
 
 interface DataItem {
 	title: string;

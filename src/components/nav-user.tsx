@@ -6,7 +6,7 @@ import { LogIn, LogOut } from "lucide-react"
 import { useSidebar } from "@/components/ui/sidebar"
 
 export function NavUser() {
-  const { isConnected, selector, connect, activeAccountId } = useBitteWallet()
+  const { isConnected, selector, connect } = useBitteWallet()
   const { state } = useSidebar()
 
   const handleSignout = async () => {

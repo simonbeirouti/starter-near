@@ -18,7 +18,6 @@ import {
   DrawerDescription,
   DrawerFooter,
   DrawerHeader,
-  DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
@@ -45,7 +44,7 @@ export function ButtonMenu() {
         <DialogHeader>
           <DialogTitle>Button Grid</DialogTitle>
           <DialogDescription>
-            Here's a grid of buttons for you to interact with.
+            Here&apos;s a grid of buttons for you to interact with.
           </DialogDescription>
         </DialogHeader>
         <ButtonsGrid />
@@ -60,7 +59,7 @@ export function ButtonMenu() {
         <DrawerHeader className="text-center">
           <ButtonsGrid />
           <DrawerDescription className="mt-4">
-            Here's a grid of buttons for you to interact with.
+            Here&apos;s a grid of buttons for you to interact with.
           </DrawerDescription>
         </DrawerHeader>
         <DrawerFooter className="pt-2">

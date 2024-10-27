@@ -18,7 +18,6 @@ import {
 	SidebarMenuSub,
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
-	useSidebar,
 } from "@/components/ui/sidebar";
 
 interface NavItem {
@@ -31,18 +30,16 @@ interface NavItem {
 	items?: NavItem[];
 }
 
-interface NavSection {
-	label: string;
-	items: NavItem[];
-}
+// interface NavSection {
+// 	label: string;
+// 	items: NavItem[];
+// }
 
 interface NavProps {
 	sections: Record<string, NavItem[]>;
 }
 
 export function DynamicNav({sections}: NavProps) {
-	const {isMobile} = useSidebar();
-
 	return (
 		<>
 			{Object.entries(sections).map(([label, items]) => (
@@ -53,7 +50,6 @@ export function DynamicNav({sections}: NavProps) {
 							<NavItemComponent
 								key={item.title || item.name}
 								item={item}
-								isMobile={isMobile}
 							/>
 						))}
 					</SidebarMenu>
@@ -65,10 +61,8 @@ export function DynamicNav({sections}: NavProps) {
 
 function NavItemComponent({
 	item,
-	isMobile,
 }: {
 	item: NavItem;
-	isMobile: boolean;
 }) {
 	const title = item.title || item.name || "";
 
