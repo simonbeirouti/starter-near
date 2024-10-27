@@ -10,9 +10,12 @@ export function middleware(request: NextRequest) {
   const isDev = process.env.NODE_ENV === 'development'
   const appDomain = isDev ? devDomain : prodDomain
   
-  // Handle app subdomain
-  if (hostname?.includes(appDomain)) {
-    return NextResponse.rewrite(new URL(`/app${url.pathname}`, url))
+  // Extract subdomain more reliably
+  const subdomain = hostname?.split('.')[0]
+  
+  // Handle app subdomain with improved logic
+  if (subdomain === 'app' || hostname?.includes(appDomain)) {
+    return NextResponse.rewrite(new URL(`/app${url.pathname}`, request.url))
   }
 
   // Handle direct /app access
@@ -24,11 +27,16 @@ export function middleware(request: NextRequest) {
   if (url.pathname.startsWith('/app/')) {
     return NextResponse.redirect(new URL(url.pathname.replace('/app', ''), `https://${appDomain}`))
   }
+
+  // Handle unknown subdomains
+  if (subdomain && subdomain !== 'www') {
+    return NextResponse.rewrite(new URL('/404', request.url))
+  }
 }
 
 export const config = {
   matcher: [
-    // Match all paths except static files and api
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    // Match all paths except specific ones
+    '/((?!api|_next|images|.*\\.(?:jpg|jpeg|gif|png|svg|ico)$).*)'
   ]
 }
