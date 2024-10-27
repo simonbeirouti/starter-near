@@ -20,13 +20,13 @@ export function DashboardHeader() {
       <SidebarMenuItem>
         <SidebarMenuButton
           size="lg"
-          className="bg-secondary hover:bg-secondary/80"
+          className="bg-secondary hover:bg-secondary/80 justify-start flex"
         >
-          <div className="flex-shrink-0 flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground mx-auto">
+          <div className="flex-shrink-0 flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground ml-1">
             <Box className="h-5 w-5 text-primary-foreground" />
           </div>
           {state === "expanded" && !isMobile && (
-            <div className="flex flex-col overflow-hidden ml-2 min-w-0">
+            <div className="flex flex-col overflow-hidden min-w-0 ml-1">
               <span className="text-sm font-semibold whitespace-nowrap overflow-x-auto scrollbar-hide text-primary dark:text-primary">
                 {isConnected && activeAccountId ? activeAccountId : "Cubed"}
               </span>

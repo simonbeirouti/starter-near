@@ -45,7 +45,7 @@ export function DynamicNav({sections}: NavProps) {
 			{Object.entries(sections).map(([label, items]) => (
 				<SidebarGroup key={label}>
 					<SidebarGroupLabel>{label}</SidebarGroupLabel>
-					<SidebarMenu className="gap-1">
+					<SidebarMenu className="gap-2">
 						{items.map((item) => (
 							<NavItemComponent
 								key={item.title || item.name}
