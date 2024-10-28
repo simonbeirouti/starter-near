@@ -2,7 +2,6 @@
 
 import { Plus, Search, SortAsc, SortDesc } from "lucide-react"
 import { Input } from "@/components/ui/input"
-import { usePathname } from "next/navigation"
 import { useEffect } from "react"
 import { useSearch } from "@/store/use-search"
 import { ReactNode } from "react"
@@ -30,7 +29,6 @@ export function SearchLayout<T extends FilterableItem>({
   tags = [],
   onAdd
 }: SearchLayoutProps<T>) {
-  const pathname = usePathname()
   const { 
     searchTerm, 
     setSearchTerm,
@@ -39,8 +37,6 @@ export function SearchLayout<T extends FilterableItem>({
     selectedTag, 
     setSelectedTag 
   } = useSearch()
-
-  const showSearch = pathname === '/proposals' || pathname === '/members' || pathname === '/members'
 
   useEffect(() => {
     let filtered = [...data];
@@ -70,8 +66,6 @@ export function SearchLayout<T extends FilterableItem>({
 
     onDataFiltered(filtered);
   }, [data, searchTerm, selectedTag, sortOrder, onDataFiltered]);
-
-  if (!showSearch) return <>{children}</>
 
   return (
     <div className="space-y-4">
