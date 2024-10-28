@@ -3,7 +3,6 @@
 import * as React from "react";
 import {
 	Bitcoin,
-	ReceiptText,
 	Contact,
 	Key,
 	BookOpenText,
@@ -34,11 +33,6 @@ export const getNavData = () => ({
 			title: "Members",
 			url: "/members",
 			icon: Contact,
-		},
-		{
-			title: "Contracts",
-			url: "/contracts",
-			icon: ReceiptText,
 		},
 		{
 			title: "DAO Factory",
