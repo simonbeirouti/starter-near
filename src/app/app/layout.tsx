@@ -8,6 +8,7 @@ import {
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
 import {BitteProvider} from "@/providers/bitte-provider";
+
 export default function DashboardLayout({
 	children,
 }: {

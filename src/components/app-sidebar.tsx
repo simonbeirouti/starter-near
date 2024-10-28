@@ -108,7 +108,7 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
 	const navData = getNavData();
 
 	return (
-		<Sidebar variant="inset" collapsible="icon" {...props}>
+		<Sidebar variant="inset" className="ml-1" collapsible="icon" {...props}>
 			<SidebarHeader>
 				<DashboardHeader />
 			</SidebarHeader>

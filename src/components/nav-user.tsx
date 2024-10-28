@@ -27,7 +27,14 @@ export function NavUser() {
   }
 
   return (
-    <Button onClick={handleClick} className="flex flex-1 items-center justify-center">
+    <Button 
+      onClick={handleClick} 
+      className={`flex flex-1 items-center justify-center text-white ${
+        isConnected 
+          ? "bg-destructive/90 hover:bg-destructive/70 dark:bg-destructive/30 dark:hover:bg-destructive/90" 
+          : "bg-green-700 hover:bg-green-300 dark:bg-green-800 dark:hover:bg-green-400"
+      }`}
+    >
       {isConnected ? <LogOut className="h-5 w-5" /> : <LogIn className="h-5 w-5" />}
       {state === "expanded" && (
         <span>{isConnected ? "Sign Out" : "Connect To NEAR"}</span>
