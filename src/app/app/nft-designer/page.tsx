@@ -1,16 +1,19 @@
 "use client";
 
-import {useState, useCallback} from "react";
+import {useState, useCallback, useRef} from "react";
 import {Card, CardContent} from "@/components/ui/card";
 import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area";
 import { NFTPreview } from "@/components/nft-preview";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { Trash2Icon } from "lucide-react";
+import { Trash2Icon, ImageIcon } from "lucide-react";
 import { LayerPositionSelect } from "@/components/layer-position-select";
+import { Input } from "@/components/ui/input";
 
 export default function NFTDesignerPage() {
 	const [layerFolders, setLayerFolders] = useState<Array<{id: string; name: string; images: File[]; order: number}>>([]);
+
+	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const handleDrop = useCallback((e: React.DragEvent) => {
 		e.preventDefault();
@@ -143,17 +146,68 @@ export default function NFTDesignerPage() {
 		);
 	};
 
+	const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		const files = e.target.files;
+		if (!files) return;
+
+		// Convert FileList to Array for easier handling
+		const fileArray = Array.from(files);
+		
+		// Group files by directory path
+		const folderMap = new Map<string, File[]>();
+		
+		fileArray.forEach(file => {
+			// Get relative path and extract folder name
+			const path = file.webkitRelativePath;
+			const folderName = path.split('/')[0];
+			
+			if (!folderMap.has(folderName)) {
+				folderMap.set(folderName, []);
+			}
+			
+			if (file.type.startsWith('image/')) {
+				folderMap.get(folderName)?.push(file);
+			}
+		});
+
+		// Create layer folders from grouped files
+		folderMap.forEach((images, folderName) => {
+			if (images.length > 0) {
+				const orderMatch = folderName.match(/^(\d+)_/);
+				const order = orderMatch ? parseInt(orderMatch[1]) - 1 : layerFolders.length;
+				
+				setLayerFolders(prev => [...prev, {
+					id: crypto.randomUUID(),
+					name: folderName,
+					images,
+					order
+				}]);
+			}
+		});
+	};
+
 	return (
 		<div className="min-h-screen">
 			<ScrollArea className="h-[calc(100vh-4rem)]">
 				<div className="space-y-8">
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 						<div 
-							className="bg-white dark:bg-gray-800 min-h-[200px] border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center text-center"
+							className="flex flex-col gap-2 bg-white dark:bg-gray-800 min-h-[200px] border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg items-center justify-center text-center cursor-pointer"
 							onDragOver={(e) => e.preventDefault()}
 							onDrop={handleDrop}
+							onClick={() => fileInputRef.current?.click()}
 						>
-							<p className="text-gray-500 dark:text-gray-400">Drag and drop image folders here</p>
+							<Input
+								type="file"
+								ref={fileInputRef}
+								onChange={handleFileSelect}
+								className="hidden"
+								// webkitdirectory=""
+								// directory=""
+								multiple
+							/>
+							<ImageIcon className="h-5 w-5" />
+							<p className="text-gray-500 dark:text-gray-400">Drop folders here or click to select</p>
 						</div>
 						{layerFolders.map((folder, index) => (
 							<FolderItem key={folder.id} folder={folder} index={index} />
