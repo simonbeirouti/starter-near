@@ -9,28 +9,24 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { getNavData } from "@/components/app-sidebar";
-interface NavItem {
-	name?: string;
-	title?: string;
-	url: string;
-	isActive?: boolean;
-	items?: NavItem[];
-}
-
-type NavData = {
-	[key: string]: NavItem[];
-}
+import { links, NavSection } from "@/components/app-sidebar";
 
 export default function BreadcrumbPath() {
 	const pathname = usePathname();
-	const navData: NavData = getNavData();
+	const navData: NavSection[] = links;
 
-	const flattenedNavData = Object.values(navData).flat();
-	const currentRoute = flattenedNavData.find(item => item.url === pathname) || 
-		flattenedNavData.find(item => item.items?.some(subItem => subItem.url === pathname));
+	// Find the current page title
+	const getCurrentPageTitle = () => {
+		for (const section of navData) {
+			const matchedItem = section.items.find(item => item.url === pathname);
+			if (matchedItem) {
+				return matchedItem.title;
+			}
+		}
+		return null;
+	};
 
-	const currentSubRoute = currentRoute?.items?.find(item => item.url === pathname);
+	const currentPageTitle = getCurrentPageTitle();
 
 	return (
 		<Breadcrumb className='flex justify-between'>
@@ -38,25 +34,16 @@ export default function BreadcrumbPath() {
 				<BreadcrumbItem>
 					<BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
 				</BreadcrumbItem>
-				{currentRoute && (
-                    <>
-                        <BreadcrumbSeparator />
+				
+				{currentPageTitle && (
+					<>
+						<BreadcrumbSeparator />
 						<BreadcrumbItem>
-							<BreadcrumbLink href={currentRoute.url}>
-								{currentRoute.title || currentRoute.name}
-							</BreadcrumbLink>
+							<BreadcrumbPage>{currentPageTitle}</BreadcrumbPage>
 						</BreadcrumbItem>
-						{currentSubRoute && (
-							<>
-								<BreadcrumbSeparator />
-								<BreadcrumbItem>
-									<BreadcrumbPage>{currentSubRoute.title || currentSubRoute.name}</BreadcrumbPage>
-								</BreadcrumbItem>
-							</>
-						)}
 					</>
 				)}
-            </BreadcrumbList>
+			</BreadcrumbList>
 		</Breadcrumb>
 	);
 }
