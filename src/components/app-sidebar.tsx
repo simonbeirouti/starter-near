@@ -62,12 +62,7 @@ export const links: NavSection[] = [
 				title: "Token",
 				url: "/token",
 				icon: Bitcoin,
-			},
-			{
-				title: "Accounts",
-				url: "/accounts",
-				icon: Key,
-				// isActive: pathname.startsWith('/keys'),
+				// isActive: pathname.startsWith('/'),
 				// items: [
 				// 	{
 				// 		title: "General",
