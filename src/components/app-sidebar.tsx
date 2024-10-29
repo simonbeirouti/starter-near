@@ -6,9 +6,9 @@ import {
 	Contact,
 	Key,
 	BookOpenText,
-	Factory,
 	Image,
 	BadgeDollarSign,
+	LucideIcon,
 } from "lucide-react";
 
 import {NavUser} from "@/components/nav-user";
@@ -22,92 +22,91 @@ import {
 } from "@/components/ui/sidebar";
 import {DynamicNav} from "@/components/dynamic-nav";
 
-export const getNavData = () => ({
-	Platform: [
-		{
-			title: "Proposals",
-			url: "/proposals",
-			icon: BookOpenText,
-		},
-		{
-			title: "Members",
-			url: "/members",
-			icon: Contact,
-		},
-		{
-			title: "DAO Factory",
-			url: "/dao-factory",
-			icon: Factory,
-		},
-		{
-			title: "NFT Designer",
-			url: "/nft-designer",
-			icon: Image,
-		},
-		{
-			title: "Auction",
-			url: "/auction",
-			icon: BadgeDollarSign,
-		},
-		{
-			title: "Token",
-			url: "/token",
-			icon: Bitcoin,
-		},
-		{
-			title: "Keys",
-			url: "/keys",
-			icon: Key,
-			// isActive: pathname.startsWith('/keys'),
-			// items: [
-			// 	{
-			// 		title: "General",
-			// 		url: "/keys/general",
-			// 	},
-			// 	{
-			// 		title: "Team",
-			// 		url: "/keys/team",
-			// 	},
-			// 	{
-			// 		title: "Billing",
-			// 		url: "/keys/billing",
-			// 	},
-			// 	{
-			// 		title: "Limits",
-			// 		url: "/keys/limits",
-			// 	},
-			// ],
-		},
-	],
-	Projects: [
-		{
-			name: "Bitconnect $BCC",
-			url: "/projects/bitconnect",
-			image: "/bcc.jpg",
-		},
-		{
-			name: "Cubed $CUBED",
-			url: "/projects/cubed",
-			image: "/cubed.png",
-		},
-		{
-			name: "Meme Broker $MBROKER",
-			url: "/projects/meme-broker",
-			image: "/memebroker.png",
-		},
-	],
-});
+export interface NavSection {
+	label: string;
+	items: NavItem[];
+}
+
+interface NavItem {
+	title?: string;
+	name?: string;
+	url?: string;
+	icon?: LucideIcon;
+}
+
+export const links: NavSection[] = [
+	{
+		label: "Main",
+		items: [
+			{
+				title: "Proposals",
+				url: "/proposals",
+				icon: BookOpenText,
+			},
+			{
+				title: "Members",
+				url: "/members",
+				icon: Contact,
+			},
+			{
+				title: "NFT Designer",
+				url: "/nft-designer",
+				icon: Image,
+			},
+			{
+				title: "Auction",
+				url: "/auction",
+				icon: BadgeDollarSign,
+			},
+			{
+				title: "Token",
+				url: "/token",
+				icon: Bitcoin,
+			},
+			{
+				title: "Accounts",
+				url: "/accounts",
+				icon: Key,
+				// isActive: pathname.startsWith('/keys'),
+				// items: [
+				// 	{
+				// 		title: "General",
+				// 		url: "/keys/general",
+				// 	},
+				// 	{
+				// 		title: "Team",
+				// 		url: "/keys/team",
+				// 	},
+				// 	{
+				// 		title: "Billing",
+				// 		url: "/keys/billing",
+				// 	},
+				// 	{
+				// 		title: "Limits",
+				// 		url: "/keys/limits",
+				// 	},
+				// ],
+			},
+		],
+	},
+];
+
+const projects = [
+	{
+		name: "Bitconnect",
+		url: "/projects/bitconnect",
+		image: "/bcc.jpg",
+	},
+];
 
 export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
-	const navData = getNavData();
-
 	return (
 		<Sidebar variant="inset" className="ml-1" collapsible="icon" {...props}>
 			<SidebarHeader>
-				<DashboardHeader />
+				<DashboardHeader projects={projects} />
 			</SidebarHeader>
 			<SidebarContent>
-				<DynamicNav sections={navData} />
+				<DynamicNav links={links} />
 			</SidebarContent>
 			<SidebarFooter>
 				<NavUser />

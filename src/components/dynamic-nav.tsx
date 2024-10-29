@@ -19,34 +19,30 @@ import {
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { NavSection } from "@/components/app-sidebar";
 
-interface NavItem {
+interface NavItemProp {
 	title?: string;
 	name?: string;
 	image?: string;
-	url: string;
+	url?: string;
 	icon?: LucideIcon;
 	isActive?: boolean;
-	items?: NavItem[];
+	items?: NavItemProp[];
 }
-
-// interface NavSection {
-// 	label: string;
-// 	items: NavItem[];
-// }
 
 interface NavProps {
-	sections: Record<string, NavItem[]>;
+	links: NavSection[];
 }
 
-export function DynamicNav({sections}: NavProps) {
+export function DynamicNav({links}: NavProps) {
 	return (
 		<>
-			{Object.entries(sections).map(([label, items]) => (
-				<SidebarGroup key={label}>
-					<SidebarGroupLabel>{label}</SidebarGroupLabel>
+			{links.map((section) => (
+				<SidebarGroup key={section.label}>
+					<SidebarGroupLabel>{section.label}</SidebarGroupLabel>
 					<SidebarMenu className="gap-2">
-						{items.map((item) => (
+						{Array.isArray(section.items) && section.items.map((item) => (
 							<NavItemComponent
 								key={item.title || item.name}
 								item={item}
@@ -62,7 +58,7 @@ export function DynamicNav({sections}: NavProps) {
 function NavItemComponent({
 	item,
 }: {
-	item: NavItem;
+	item: NavItemProp;
 }) {
 	const title = item.title || item.name || "";
 
@@ -77,28 +73,30 @@ function NavItemComponent({
 				<SidebarMenuItem>
 					<CollapsibleTrigger asChild>
 						<SidebarMenuButton tooltip={title}>
-							<Link
-								className="flex items-center gap-2 w-full"
-								href={item.url}
-							>
+							<div className="flex items-center gap-2 w-full">
 								{item.icon && (
 									<item.icon className="h-4 w-4 shrink-0" />
 								)}
 								<span className="truncate">{title}</span>
-							</Link>
-							<ChevronRight className="ml-auto h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+								<ChevronRight className="ml-auto h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+							</div>
 						</SidebarMenuButton>
 					</CollapsibleTrigger>
-					<CollapsibleContent className="ml-1">
+					<CollapsibleContent className="ml-4">
 						<SidebarMenuSub>
 							{item.items.map((subItem) => (
 								<SidebarMenuSubItem
-									className="pl-1"
 									key={subItem.title || subItem.name}
 								>
 									<SidebarMenuSubButton asChild>
-										<Link href={subItem.url}>
-											<span>
+										<Link 
+											href={subItem.url || ""}
+											className="flex items-center gap-2 w-full py-2"
+										>
+											{subItem.icon && (
+												<subItem.icon className="h-4 w-4 shrink-0" />
+											)}
+											<span className="truncate">
 												{subItem.title || subItem.name}
 											</span>
 										</Link>
@@ -115,17 +113,21 @@ function NavItemComponent({
 	return (
 		<SidebarMenuItem key={title}>
 			<SidebarMenuButton asChild tooltip={title}>
-				<Link className="flex items-center" href={item.url}>
-					{item.icon && <item.icon className="h-6 w-6 shrink-0" />}
+				<Link 
+					className="flex items-center gap-3 w-full" 
+					href={item.url || ""}
+				>
+					{item.icon && (
+						<item.icon className="h-5 w-5 shrink-0" />
+					)}
 					{item.image && (
-						<div className="-ml-1 h-8 w-8 relative overflow-hidden rounded-full shrink-0">
+						<div className="h-5 w-5 relative overflow-hidden rounded-full shrink-0">
 							<Image
 								src={item.image}
 								alt={title}
-								width={24}
-								height={24}
-								className="object-cover w-full h-full"
-							/>
+									fill
+									className="object-cover"
+								/>
 						</div>
 					)}
 					<span className="truncate">{title}</span>
