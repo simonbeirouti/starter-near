@@ -2,16 +2,23 @@
 
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
-import {Card} from "@/components/ui/card";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/components/ui/accordion";
 import {useEffect, useState} from "react";
 import {SearchLayout} from "@/components/search-layout";
 import {useSearch} from "@/store/use-search";
+import {HeartIcon} from "lucide-react";
 
 interface Proposal {
 	title: string;
 	description: string;
 	tags: string[];
 	likes: number;
+	votes: {yes: number; no: number};
 	image?: string;
 }
 
@@ -22,6 +29,7 @@ const proposals: Proposal[] = [
 			"Description for Proposal 1 - This is an extended description to increase length and provide more details about the proposal.",
 		tags: ["finance", "governance"],
 		likes: 156,
+		votes: {yes: 30, no: 50},
 		// image: "https://example.com/image1.jpg"
 	},
 	{
@@ -30,6 +38,7 @@ const proposals: Proposal[] = [
 			"Description for Proposal 2 - This is an extended description to increase length and provide more details about the proposal.",
 		tags: ["community", "events"],
 		likes: 89,
+		votes: {yes: 0, no: 0},
 		// image: "https://example.com/image2.jpg"
 	},
 	{
@@ -38,6 +47,7 @@ const proposals: Proposal[] = [
 			"Description for Proposal 3 - This is an extended description to increase length and provide more details about the proposal.",
 		tags: ["finance", "development"],
 		likes: 234,
+		votes: {yes: 0, no: 0},
 		// image: "https://example.com/image3.jpg"
 	},
 	{
@@ -46,6 +56,7 @@ const proposals: Proposal[] = [
 			"Description for Proposal 4 - This is an extended description to increase length and provide more details about the proposal.",
 		tags: ["governance", "community"],
 		likes: 67,
+		votes: {yes: 0, no: 0},
 		// image: "https://example.com/image4.jpg"
 	},
 ];
@@ -67,7 +78,7 @@ export default function ProposalsPage() {
 				new Set(proposals.flatMap((proposal) => proposal.tags))
 			)}
 		>
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+			<div className="gap-4">
 				{filteredProposals.map((proposal, index) => (
 					<ProposalCard key={index} proposal={proposal} />
 				))}
@@ -76,54 +87,74 @@ export default function ProposalsPage() {
 	);
 }
 
-export function ProposalCard({proposal}: {proposal: Proposal}) {
+function ProposalCard({proposal}: {proposal: Proposal}) {
+	const totalVotes = proposal.votes.yes + proposal.votes.no;
+	const yesPercentage =
+		totalVotes === 0
+			? 0
+			: Math.round((proposal.votes.yes / totalVotes) * 100);
+	const noPercentage =
+		totalVotes === 0
+			? 0
+			: Math.round((proposal.votes.no / totalVotes) * 100);
+
 	return (
-		<Card className="flex flex-col overflow-hidden border bg-card text-card-foreground shadow">
-			<div className="p-6">
-				<div className="flex flex-col space-y-1.5">
-					<div className="flex justify-between items-center">
-						<h3 className="font-semibold leading-none tracking-tight text-xl">
+		<Accordion type="single" collapsible className="w-full">
+			<AccordionItem value={proposal.title}>
+				<AccordionTrigger>
+					<div className="flex justify-between items-center w-full">
+						<h3 className="text-xl font-bold tracking-tight underline">
 							{proposal.title}
 						</h3>
-						<div className="flex items-center gap-1 text-sm text-muted-foreground">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="16"
-								height="16"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								className="text-red-500"
-							>
-								<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-							</svg>
-							{proposal.likes}
+						<div className="flex items-center gap-1 text-muted-foreground mr-4">
+							{proposal.tags.map(
+								(tag: string, tagIndex: number) => (
+									<Badge
+										key={tagIndex}
+										variant="secondary"
+										className="bg-secondary/50 text-md"
+									>
+										{tag}
+									</Badge>
+								)
+							)}
+							<HeartIcon className="w-4 h-4 text-red-500" />
+							<span className="text-lg">{proposal.likes}</span>
 						</div>
 					</div>
-					<p className="text-sm w-4/5 text-muted-foreground">
+				</AccordionTrigger>
+				<AccordionContent>
+					<p className="text-md text-muted-foreground">
 						{proposal.description}
 					</p>
-				</div>
-			</div>
-			<div className="flex items-center justify-between p-6 pt-0">
-				<div className="flex flex-wrap gap-2">
-					{proposal.tags.map((tag: string, tagIndex: number) => (
-						<Badge
-							key={tagIndex}
-							variant="secondary"
-							className="bg-secondary/50"
-						>
-							{tag}
-						</Badge>
-					))}
-				</div>
-				<Button variant="outline" size="sm">
-					View Details
-				</Button>
-			</div>
-		</Card>
+					<div className="flex flex-col items-center justify-between pt-4">
+						<div className="w-full">
+							<div className="bg-gray-200 h-4 rounded-lg flex overflow-hidden">
+								<div
+									className="bg-green-500 h-full"
+									style={{width: `${yesPercentage}%`}}
+								></div>
+								<div
+									className="bg-red-500 h-full"
+									style={{width: `${noPercentage}%`}}
+								></div>
+							</div>
+							<div className="text-sm text-gray-500 my-4">
+								Total Votes: {totalVotes} ({yesPercentage}% Yes,{" "}
+								{noPercentage}% No)
+							</div>
+						</div>
+						<div className="flex gap-2 w-full">
+							<Button className="w-full bg-green-500 dark:bg-green-700 light:bg-green-300">
+								Vote yes
+							</Button>
+							<Button className="w-full bg-red-500 dark:bg-red-700 light:bg-red-300">
+								Vote no
+							</Button>
+						</div>
+					</div>
+				</AccordionContent>
+			</AccordionItem>
+		</Accordion>
 	);
 }
