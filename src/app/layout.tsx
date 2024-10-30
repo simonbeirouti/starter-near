@@ -17,7 +17,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 					defaultTheme="system"
 					enableSystem
 				>
-					<BitteProvider>{children}</BitteProvider>
+					<BitteProvider>
+						{children}
+					</BitteProvider>
 				</ThemeProvider>
 			</body>
 		</html>
