@@ -28,10 +28,13 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(url.pathname.replace('/app', ''), `https://${appDomain}`))
   }
 
-  // Handle unknown subdomains
-  if (subdomain && subdomain !== 'www') {
+  // Modified subdomain handling
+  if (subdomain && subdomain !== 'www' && !hostname?.includes(appDomain)) {
     return NextResponse.rewrite(new URL('/404', request.url))
   }
+
+  // Add a default case to handle the main domain
+  return NextResponse.next()
 }
 
 export const config = {
