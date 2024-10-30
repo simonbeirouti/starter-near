@@ -2,7 +2,7 @@ import {Inter} from "next/font/google";
 import "./globals.css";
 import "@near-wallet-selector/modal-ui/styles.css";
 import {ThemeProvider} from "@/providers/theme-provider";
-import {BitteProvider} from "@/providers/bitte-provider";
+// import {BitteProvider} from "@/providers/bitte-provider";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -17,7 +17,8 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 					defaultTheme="system"
 					enableSystem
 				>
-					<BitteProvider>{children}</BitteProvider>
+					{/* <BitteProvider>{children}</BitteProvider> */}
+					{children}
 				</ThemeProvider>
 			</body>
 		</html>
