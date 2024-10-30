@@ -13,27 +13,12 @@ export function middleware(request: NextRequest) {
   // Extract subdomain more reliably
   const subdomain = hostname?.split('.')[0]
   
-  // Handle app subdomain with improved logic
+  // Only handle app subdomain cases
   if (subdomain === 'app' || hostname?.includes(appDomain)) {
     return NextResponse.rewrite(new URL(`/app${url.pathname}`, request.url))
   }
 
-  // Handle direct /app access
-  if (url.pathname === '/app') {
-    return NextResponse.redirect(new URL(`https://${appDomain}`))
-  }
-
-  // Handle other /app/* routes
-  if (url.pathname.startsWith('/app/')) {
-    return NextResponse.redirect(new URL(url.pathname.replace('/app', ''), `https://${appDomain}`))
-  }
-
-  // Modified subdomain handling
-  if (subdomain && subdomain !== 'www' && !hostname?.includes(appDomain)) {
-    return NextResponse.rewrite(new URL('/404', request.url))
-  }
-
-  // Add a default case to handle the main domain
+  // For all other cases (including main domain), just continue normally
   return NextResponse.next()
 }
 
