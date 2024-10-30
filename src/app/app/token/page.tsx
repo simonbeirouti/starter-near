@@ -25,8 +25,7 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import {Input} from "@/components/ui/input";
-import {Label} from "@/components/ui/label";
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent} from "@/components/ui/card";
 import Image from "next/image";
 import {ImageIcon} from "lucide-react";
 
@@ -108,8 +107,7 @@ function DrawerDialog() {
 				<Header className="text-left">
 					<Title>Create Token</Title>
 					<Description>
-						Create your new token here. Click create when you're
-						done.
+						Create your new token here. Click create when you&apos;re done.
 					</Description>
 				</Header>
 				<TokenForm />

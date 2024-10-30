@@ -4,7 +4,6 @@ import * as React from "react";
 import {
 	Bitcoin,
 	Contact,
-	Key,
 	BookOpenText,
 	Image,
 	BadgeDollarSign,

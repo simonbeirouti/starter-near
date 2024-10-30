@@ -5,6 +5,7 @@ import {useState, useEffect} from "react";
 import {Button} from "@/components/ui/button";
 import {Card, CardContent} from "@/components/ui/card";
 import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area";
+import Image from "next/image";
 
 // export const metadata: Metadata = {
 //   title: "NFT Designer",
@@ -88,9 +89,11 @@ export default function NFTDesignerPage() {
 									onClick={() => handleSelectLayer(imagePath)}
 								>
 									<CardContent className="p-2">
-										<img
+										<Image
 											src={imagePath}
 											alt={`Option ${index + 1}`}
+											width={200}
+											height={200}
 											className="w-full h-auto object-contain"
 										/>
 									</CardContent>
@@ -105,10 +108,12 @@ export default function NFTDesignerPage() {
 					{selectedLayers.map(
 						(layer, index) =>
 							layer && (
-								<img
+								<Image
 									key={index}
 									src={layer}
 									alt={`Layer ${index + 1}`}
+									width={500}
+									height={500}
 									className="absolute top-0 left-0 w-full h-full object-contain"
 								/>
 							)
