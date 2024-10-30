@@ -13,18 +13,31 @@ export function middleware(request: NextRequest) {
   // Extract subdomain more reliably
   const subdomain = hostname?.split('.')[0]
   
-  // Only handle app subdomain cases
+  // Handle app subdomain with improved logic
   if (subdomain === 'app' || hostname?.includes(appDomain)) {
     return NextResponse.rewrite(new URL(`/app${url.pathname}`, request.url))
   }
 
-  // For all other cases (including main domain), just continue normally
-  return NextResponse.next()
+  // Handle direct /app access
+  if (url.pathname === '/app') {
+    return NextResponse.redirect(new URL(`https://${appDomain}`))
+  }
+
+  // Handle other /app/* routes
+  if (url.pathname.startsWith('/app/')) {
+    return NextResponse.redirect(new URL(url.pathname.replace('/app', ''), `https://${appDomain}`))
+  }
+
+  // Handle unknown subdomains
+  if (subdomain && subdomain !== 'www') {
+    return NextResponse.rewrite(new URL('/404', request.url))
+  }
 }
 
 export const config = {
   matcher: [
-    // Match all paths except specific ones
-    '/((?!api|_next|images|.*\\.(?:jpg|jpeg|gif|png|svg|ico)$).*)'
+    // Only match paths that could be app routes
+    // Explicitly exclude _next, static files, and api routes
+    '/((?!_next/|.*\\.[\\w]+$|api/).*)'
   ]
 }
