@@ -36,8 +36,8 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Only match paths that could be app routes
-    // Explicitly exclude _next, static files, and api routes
-    '/((?!_next/|.*\\.[\\w]+$|api/).*)'
+    // Only match specific patterns
+    '/',
+    '/(app|dashboard|protected)/:path*'
   ]
 }
